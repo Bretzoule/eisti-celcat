@@ -1,10 +1,39 @@
 {
-    "login": "e-$$$$$$",
-    "password": "",
+    "dataArray": [
+        {
+            "classe": "cpi2g1",
+            "login": "e-#####",
+            "password": "",
+            "ics_path": "emploicpi2g1.ics"
+        },
+        {
+            "classe": "cpi2g2",
+            "login": "e-#####",
+            "password": "",
+            "ics_path": "emploicpi2g2.ics"
+        },
+        {
+            "classe": "ing1gi1",
+            "login": "e-#####",
+            "password": "",
+            "ics_path": "emploiing1gi1.ics"
+        },
+        {
+            "classe": "ing1gi2",
+            "login": "e-#####",
+            "password": "",
+            "ics_path": "emploiing1gi2.ics"
+        },
+        {
+            "classe": "ing1gm",
+            "login": "e-#####",
+            "password": "",
+            "ics_path": "emploiing1gm.ics"
+        }
+    ],
     "login_url": "https://services-web.u-cergy.fr/calendar/LdapLogin",
     "time_url": "https://services-web.u-cergy.fr/calendar/cal?vt=month",
     "response_url": "https://services-web.u-cergy.fr/calendar/Home/GetCalendarData",
     "login_id": "#Name",
-    "passw_id": "#Password",
-    "ics_path": "emploi.ics"
+    "passw_id": "#Password"
 }

@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const settings = require('./settings.json');
+const settingslist = require('./settings.json');
 const moment = require('moment');
 const ics = require('ics');
 const fs = require('fs');
@@ -24,39 +24,36 @@ function parseDesc(text) {
         [text[0]], text[1], text.slice(2).join('\n')
     ]
 }
-
-(async() => {
-    const browser = await puppeteer.launch({
-        headless: true,
-    });
-
-    try {
+settingslist.dataArray.forEach(settings => {
+    (async () => {
+        const browser = await puppeteer.launch({
+            headless: true,
+        });
         const page = await browser.newPage();
 
-        await page.goto(settings.login_url);
-        await type(page, settings.login_id, settings.login);
-        await type(page, settings.passw_id, settings.password);
+        await page.goto(settingslist.login_url);
+        await type(page, settingslist.login_id, settings.login);
+        await type(page, settingslist.passw_id, settings.password);
         await pressEnter(page);
-    } catch (e) {
-        console.log(e)
-        return await browser.close();
-    }
 
-    page.on('response', async(res) => {
-        if (res.url().startsWith(settings.response_url)) {
-            let data = (await res.json()).map(x => { return { "start": moment(x.start).format('YYYY-M-D-H-m').split("-"), "end": moment(x.end).format('YYYY-M-D-H-m').split("-"), "description": parseDesc(x.description)[2], "title": parseDesc(x.description)[1], "categories": parseDesc(x.description)[0], "startOutputType": "local" } });
-            ics.createEvents(data, async(e, v) => {
-                if (!e) {
-                    try {
-                        await fs.writeFileSync(settings.ics_path, v);
-                    } catch (error) {
-                        console.log(error);
+        page.on('response', async (res) => {
+            if (res.url().startsWith(settingslist.response_url)) {
+                let data = (await res.json()).map(x => { return { "start": moment(x.start).format('YYYY-M-D-H-m').split("-"), "end": moment(x.end).format('YYYY-M-D-H-m').split("-"), "description": parseDesc(x.description)[2], "title": parseDesc(x.description)[1], "categories": parseDesc(x.description)[0], "startOutputType": "local" } });
+                ics.createEvents(data, async (e, v) => {
+                    if (!e) {
+                        try {
+                            await fs.writeFileSync(settings.ics_path, v);
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        console.log(e);
                     }
-                } else {
-                    console.log(e);
-                }
-                await browser.close();
-            })
-        }
-    })
-})();
+                    await browser.close();
+                });
+            } else {
+                console.log("Identifiants incorrect pour la classe : " + settings.classe);
+            } 
+        });
+    })();
+});
