@@ -51,9 +51,7 @@ settingslist.dataArray.forEach(settings => {
                     }
                     await browser.close();
                 });
-            } else {
-                console.log("Identifiants incorrect pour la classe : " + settings.classe);
-            } 
+            }
         });
     })();
 });
