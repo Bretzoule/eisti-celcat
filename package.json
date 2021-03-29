@@ -12,6 +12,7 @@
     "html-entities": "^2.1.1",
     "ics": "^2.27.0",
     "moment": "^2.29.1",
+    "node-fetch": "^2.6.1",
     "puppeteer": "^5.5.0"
   }
 }
