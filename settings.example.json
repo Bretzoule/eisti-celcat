@@ -1,0 +1,23 @@
+{
+    "login_url": "https://services-web.u-cergy.fr/calendar/LdapLogin",
+    "auth_url": "https://services-web.u-cergy.fr/calendar/LdapLogin/Logon",
+    "calendar_url": "https://services-web.u-cergy.fr/calendar",
+    "response_url": "https://services-web.u-cergy.fr/calendar/Home/GetCalendarData",
+    "login": "e-#######",
+    "password": "######",
+    "ics_path": "calendar",
+    "people": [
+        {
+            "id": "######",
+            "slug": "ING2GSI1"
+        },
+        {
+            "id":"######",
+            "slug": "ING2MI"
+        }, 
+        {
+            "id":"######",
+            "slug":"ING2GSI2"
+        }
+    ]
+}
