@@ -20,6 +20,6 @@ Add your IDs into settings.example.json and rename it settings.json.
 
 # Thanksies 
 
-[Obito's Celcat in GO](https://github.com/alecs297/eisti-celcat)
+[Obito's Celcat in GO](https://github.com/Obito1903/CY-celcat)
 
-[Fouin's Celcat in Node](https://github.com/Obito1903/CY-celcat)
+[Fouin's Celcat in Node](https://github.com/alecs297/eisti-celcat)
