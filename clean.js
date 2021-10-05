@@ -66,7 +66,7 @@ function get_lc(r) {
                 "start": moment(x.start).format('YYYY-M-D-H-m').split("-"),
                 "end": moment(x.end).format('YYYY-M-D-H-m').split("-").length > 2 ? moment(x.end).format('YYYY-M-D-H-m').split("-") : moment(x.start).add(1, 'h').format('YYYY-M-D-H-m').split("-"),
                 "description": parseDesc(x.description)[2],
-                "title": parseDesc(x.description)[1] + ' - ' + ((parseDesc(x.description)[2].slice(0,8).match("^PAU*") ) ? (parseDesc(x.description)[2].slice(4,8)) : ""),
+                "title": parseDesc(x.description)[1] + ((parseDesc(x.description)[2].slice(0,8).match("^PAU*") ) ? " - " + (parseDesc(x.description)[2].slice(4,8)) : ""),
                 "categories": parseDesc(x.description)[0],
                 "startOutputType": "local"
             }
