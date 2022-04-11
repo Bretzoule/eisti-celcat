@@ -45,15 +45,15 @@ async function get_antiforgerystuff() {
 function get_lc(r) {
     return r.headers.get("set-cookie").split(";")[0];
 }
-(async() => {
+(async () => {
     console.log("Reaching website.");
     let af = await get_antiforgerystuff();
     console.log("Logging in...");
     let res = await do_request(settings.auth_url,
         "POST", {
-            cookie: af[0],
-            "content-type": "application/x-www-form-urlencoded"
-        },
+        cookie: af[0],
+        "content-type": "application/x-www-form-urlencoded"
+    },
         `Name=${encodeURIComponent(settings.login)}&Password=${encodeURIComponent(settings.password)}&__RequestVerificationToken=${encodeURIComponent(af[1])}`
     );
     settings.people.forEach(async c => {
@@ -61,18 +61,19 @@ function get_lc(r) {
         res = await do_request(settings.response_url, "POST", { cookie: `${af[0]};${get_lc(res)}` }, `start=${moment().subtract(1, "month").format("YYYY-MM-DD")}&end=${moment().add(1, "year").format("YYYY")}-12-31&resType=104&calView=month&federationIds%5B%5D=${c.id}`);
         console.log("Parsing data for " + c.slug);
         let data = (await res.json()).map(x => {
-            console.log(parseDesc(x.description)[2]);
+            console.log(parseDesc(x.description)[2])
+            
             return {
-                "start": moment(x.start).format('YYYY-M-D-H-m').split("-"),
-                "end": moment(x.end).format('YYYY-M-D-H-m').split("-").length > 2 ? moment(x.end).format('YYYY-M-D-H-m').split("-") : moment(x.start).add(1, 'h').format('YYYY-M-D-H-m').split("-"),
+                "start": moment(x.start).format('YYYY-M-D-H-m').split("-").map(x => parseInt(x,10)),
+                "end": (moment(x.end).format('YYYY-M-D-H-m').split("-").length > 2 ? moment(x.end).format('YYYY-M-D-H-m').split("-") : moment(x.start).add(1, 'h').format('YYYY-M-D-H-m').split("-")).map(x => parseInt(x,10)),
                 "description": parseDesc(x.description)[2],
-                "title": parseDesc(x.description)[1] + ((parseDesc(x.description)[2].slice(0,8).match("^PAU*") ) ? " - " + (parseDesc(x.description)[2].slice(4,8)) : ""),
+                "title": parseDesc(x.description)[1] + ((parseDesc(x.description)[2].slice(0, 8).match("^PAU*")) ? " - " + (parseDesc(x.description)[2].slice(4, 8)) : ""),
                 "categories": parseDesc(x.description)[0],
                 "startOutputType": "local"
             }
         });
 
-        ics.createEvents(data, async(e, v) => {
+        ics.createEvents(data, async (e, v) => {
             if (!e) {
                 try {
                     console.log('Writing ics for ' + c.slug);
@@ -87,6 +88,5 @@ function get_lc(r) {
         })
     });
 
-    
-})();
 
+})();
