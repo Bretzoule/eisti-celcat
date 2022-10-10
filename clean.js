@@ -12,10 +12,20 @@ const default_headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
 }
 
+function getNextNoGroup(str) {
+	let i = 1;
+    let reg = /(groupe*)|(promo*)/i;
+	while(str[i] != undefined && str[i].match(reg)) {
+		i++
+	}
+	return(i)
+}
+
 function parseDesc(t) {
     t = he.decode(t.replace(/\r\n/g, "").replace(/<br \/>/g, "\n")).split("\n");
-    return [
-        [t[0]], t[1], t.slice(2).join('\n')
+	let index = getNextNoGroup(t) 
+	return [
+        [t[0]], t[index], t.slice(index+1).join('\n')
     ]
 }
 
@@ -61,18 +71,15 @@ function get_lc(r) {
         res = await do_request(settings.response_url, "POST", { cookie: `${af[0]};${get_lc(res)}` }, `start=${moment().subtract(1, "month").format("YYYY-MM-DD")}&end=${moment().add(1, "year").format("YYYY")}-12-31&resType=104&calView=month&federationIds%5B%5D=${c.id}`);
         console.log("Parsing data for " + c.slug);
         let data = (await res.json()).map(x => {
-            console.log(parseDesc(x.description)[2])
-            
             return {
                 "start": moment(x.start).format('YYYY-M-D-H-m').split("-").map(x => parseInt(x,10)),
                 "end": (moment(x.end).format('YYYY-M-D-H-m').split("-").length > 2 ? moment(x.end).format('YYYY-M-D-H-m').split("-") : moment(x.start).add(1, 'h').format('YYYY-M-D-H-m').split("-")).map(x => parseInt(x,10)),
                 "description": parseDesc(x.description)[2],
-                "title": parseDesc(x.description)[1] + ((parseDesc(x.description)[2].slice(0, 8).match("^PAU*")) ? " - " + (parseDesc(x.description)[2].slice(4, 8)) : ""),
+                "title": parseDesc(x.description)[1] + ((parseDesc(x.description)[2].slice(0, 8).match("(^PAU*)|(^TUR*)|(^CAU*)|(^CON*)|(^STM*)")) ? " - " + (parseDesc(x.description)[2].slice(0, 8)) : ""),
                 "categories": parseDesc(x.description)[0],
                 "startOutputType": "local"
             }
         });
-
         ics.createEvents(data, async (e, v) => {
             if (!e) {
                 try {
